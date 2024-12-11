@@ -1,0 +1,129 @@
+﻿@model IEnumerable<perfume.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<div id="featured-products" style="margin-top:100px;">
+    <div class="container-lg">
+        <div class="display-header mt-0 text-center mb-5">
+            <h2 class="display-4 text-uppercase">Check our perfumes</h2>
+            <p class="fs-5">Check it out our varieties of perfumes .</p>
+        </div>
+        <div class="product-content">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="image-holder position-relative zoom-effect">
+                                <div >
+                               
+                                    <img src="../@item.ImageURL" alt="@item.Name" class="img-fluid">
+                                </div>
+
+                            </div>
+                            <div class="card-detail mt-3 text-start">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <h3 class="card-title fs-4 mb-2 mt-0">
+                                        <a href="single-product.html" class="text-secondary text-uppercase">@item.Name</a>
+                                    </h3>
+                                    <div class="cart-button ms-3" style="height:30px;width:30px;">
+                                        <button type="button" class="btn btn-outline-secondary rounded-circle d-flex justify-content-center align-items-center" style="height:30px;width:30px;">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                    <div class="cart-button ms-3" style="height:30px;width:30px;">
+                                        <button type="button" class="btn btn-outline-secondary rounded-circle d-flex justify-content-center align-items-center" style="height:30px;width:30px;">
+                                            <i class="fas fa-cart-shopping"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="card-price text-secondary fs-3 me-2">$@item.WithDiscount</div>
+                                    <del class="text-muted">$@item.Price</del>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WithDiscount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageURL)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WithDiscount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageURL)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+*@

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using perfume.Models;
 
 namespace perfume.Data
 {
@@ -9,5 +10,6 @@ namespace perfume.Data
             : base(options)
         {
         }
+        public DbSet<perfume.Models.Product> Product { get; set; } = default!;
     }
 }
