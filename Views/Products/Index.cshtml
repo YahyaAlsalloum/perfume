@@ -37,9 +37,12 @@
                                         </button>
                                     </div>
                                     <div class="cart-button ms-3" style="height:30px;width:30px;">
-                                        <button type="button" class="btn btn-outline-secondary rounded-circle d-flex justify-content-center align-items-center" style="height:30px;width:30px;">
+                                        <a type="button"
+                                            class="btn btn-outline-secondary rounded-circle d-flex justify-content-center align-items-center"
+                                            style="height:30px;width:30px;"
+                                            asp-action="AddToCart" asp-route-productId="@item.Id">
                                             <i class="fas fa-cart-shopping"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
 

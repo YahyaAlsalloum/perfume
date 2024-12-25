@@ -12,7 +12,7 @@
         public string? ImageURL { get; set; }
 
         // Relationships
-        public ICollection<OrderDetail> OrderDetails { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<OrderProduct>? OrderProducts { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
     }
 }

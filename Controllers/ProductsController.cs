@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,13 @@ namespace perfume.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHost;
-        public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHost)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHost, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _webHost = webHost;
+            _userManager = userManager;
         }
 
         // GET: Products
@@ -36,6 +41,66 @@ namespace perfume.Controllers
                 Problem("Entity set 'ApplicationDbContext.Product'  is null.");
             }
         }
+        //GET : Products in admin page
+        public async Task<IActionResult> IndexAdmin()
+        {
+            return _context.Product != null ?
+                        View(await _context.Product.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+
+            if (_context.Product != null)
+            {
+                View(await _context.Product.ToListAsync());
+            }
+            else
+            {
+                Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+            }
+        }
+
+
+
+        [Authorize]
+        public async Task<IActionResult> AddToCart(int productId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("You must be logged in to add items to your cart.");
+
+            // Check if product exists
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null) return NotFound("Product not found.");
+
+            // Check if a temporary cart order already exists
+            var cartOrder = await _context.Order
+                .FirstOrDefaultAsync(o => o.UserId == user.Id && o.Status == "Cart");
+
+            // If not, create a new cart order
+            if (cartOrder == null)
+            {
+                cartOrder = new Order
+                {
+                    UserId = user.Id,
+                    Status = "Cart", // Placeholder status
+                    OrderDate = DateTime.Now
+                };
+                _context.Order.Add(cartOrder);
+                await _context.SaveChangesAsync();
+            }
+
+            // Add product to OrderProduct table with the temporary order
+            var orderProduct = new OrderProduct
+            {
+                ProductId = productId,
+                OrderId = cartOrder.Id
+            };
+
+            _context.OrderProducts.Add(orderProduct);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Products");
+        }
+
+
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -61,8 +126,7 @@ namespace perfume.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create( Product product , IFormFile imageFile)

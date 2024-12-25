@@ -22,10 +22,7 @@ namespace perfume.Controllers
         {
             return View();
         }
-        public IActionResult HOMS()
-        {
-            return View();
-        }
+      
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

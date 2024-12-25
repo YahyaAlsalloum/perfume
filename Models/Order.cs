@@ -3,13 +3,16 @@
     public class Order
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public ApplicationUser User { get; set; }
-        public DateTime OrderDate { get; set; }
-        public decimal TotalAmount { get; set; }
-        public string Status { get; set; }
+       
+        public string UserId { get; set; }
 
-        // Relationships
-        public ICollection<OrderDetail>? OrderDetails { get; set; }
+        // Navigation :
+        public ApplicationUser User { get; set; }
+
+        // Relationship :
+        public ICollection<OrderProduct>? OrderProducts { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string? Status { get; set; }
     }
 }
