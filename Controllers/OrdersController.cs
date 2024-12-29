@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using perfume.Data;
 using perfume.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace perfume.Controllers
 {
@@ -52,6 +53,7 @@ namespace perfume.Controllers
         }
 
         // GET: Orders/Create
+        //[Authorize]
         public async Task<IActionResult> Create()
         {
             /*            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
