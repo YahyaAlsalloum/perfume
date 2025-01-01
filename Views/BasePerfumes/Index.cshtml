@@ -1,47 +1,80 @@
-﻿@model IEnumerable<perfume.Models.BasePerfume>
+﻿@model perfume.Models.BasePerfume
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "base perfume";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Size)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SelectedBases)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SelectedBases)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    var roses = (dynamic[])ViewData["Roses"];
+    var fruits = (dynamic[])ViewData["Fruits"];
+    var woods = (dynamic[])ViewData["Woods"];
 }
-    </tbody>
-</table>
+
+<div class="container">
+    <form asp-action="Create" method="post"> 
+    <div class="row">
+        <div class="col-md-4">
+            <h2>العطور الزهرية</h2>
+            @foreach (var rose in roses)
+            {
+                <div class="card mt-3">
+                    <img src="@rose.img" alt="@rose.Name" style="height:120px;width:100%;object-fit: cover;object-position: center;width: 100%;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@rose.Name</h5>
+                        <input type="checkbox" id="@rose.Id" name="selectedRoses" value="@rose.Name" />
+                        <label for="@rose.Name">اختيار</label>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <h2>العطور الفواكهية</h2>
+            @foreach (var fruit in fruits)
+            {
+                <div class="card mt-3">
+                    <img src="@fruit.img" alt="@fruit.Name" style="height:120px;width:100%;object-fit: cover;object-position: center;width: 100%;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@fruit.Name</h5>
+                        <input type="checkbox" id="@fruit.Id" name="selectedFruits" value="@fruit.Name" />
+                        <label for="@fruit.Name">اختيار</label>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <h2>العطور الخشبية</h2>
+            @foreach (var wood in woods)
+            {
+                <div class="card mt-3">
+                    <img src="@wood.img" alt="@wood.Name" style="height:120px;width:100%;object-fit: cover;object-position: center;width: 100%;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@wood.Name</h5>
+                        <input type="checkbox" id="@wood.Id" name="selectedWoods" value="@wood.Name" />
+                        <label for="@wood.Name">اختيار</label>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+        <div class="form-group">
+            <label asp-for="Size" class="control-label">الحجم (مل)</label>
+            <select asp-for="Size" class="form-control">
+                <option value="50">50 مل</option>
+                <option value="100">100 مل</option>
+                <option value="200">200 مل</option>
+            </select>
+            <span asp-validation-for="Size" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Quantity" class="control-label">العدد</label>
+            <input asp-for="Quantity" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group d-flex justify-content-center mt-3">
+            <input type="submit" value="Make It !" class="btn btn-primary" style="width:40%" />
+        </div>
+    </form>
+</div>
+
