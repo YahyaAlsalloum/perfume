@@ -80,7 +80,7 @@ namespace perfume.Controllers
                 cartOrder = new Order
                 {
                     UserId = user.Id,
-                    Status = "Cart", // Placeholder status
+                    Status = "Cart", 
                     OrderDate = DateTime.Now
                 };
                 _context.Order.Add(cartOrder);

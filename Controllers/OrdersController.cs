@@ -58,14 +58,18 @@ namespace perfume.Controllers
         {
             /*            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             */
+            var lastOrder = await _context.Order
+         .OrderByDescending(o => o.OrderDate)
+         .FirstOrDefaultAsync();
 
             // fetch the selected products 
             var selectedProducts = await _context.OrderProducts
-        .Where(op => op.OrderId == 1)
+        .Where(op => op.OrderId == lastOrder.Id)
         .Include(op => op.Product) // to include product details
         .ToListAsync();
 
             ViewData["cartProducts"] = selectedProducts;
+
             return View();
         }
 
@@ -73,7 +77,7 @@ namespace perfume.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Order order)
+        public async Task<IActionResult> Create( Order order, List<OrderProduct> orderProducts ,int TotalAmount)
         {
             // Get the user 
             var user = await _userManager.GetUserAsync(User);
@@ -85,14 +89,25 @@ namespace perfume.Controllers
             {
                 order.UserId = user.Id;
                 order.OrderDate = DateTime.Now;
+                order.TotalAmount = TotalAmount;
                 order.Status = "Pinding";
                 _context.Add(order);
                 await _context.SaveChangesAsync();
+                foreach (var product in orderProducts)
+                {
+                    product.OrderId = order.Id;
+
+                    _context.Add(product);
+                }
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
             return View(order);
         }
+
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)

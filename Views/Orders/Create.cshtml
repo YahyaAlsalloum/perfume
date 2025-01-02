@@ -12,43 +12,7 @@
 
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (cartProducts != null && cartProducts.Any())
-        {
-            decimal totalAmount = 0;
-            foreach (var item in cartProducts)
-            {
-                totalAmount += item.Product.Price;
 
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Product.Price.ToString("C")</td>
-                    <td>
-                        <a class="btn btn-danger" asp-controller="OrderProducts" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-            <div class="form-group">
-                <label  class="control-label"> Total price</label>
-                <input asp-for="TotalAmount" class="form-control" value="@totalAmount" disabled />
-                <span asp-validation-for="TotalAmount" class="text-danger"></span>
-            </div>
-
-        }
-        else
-        {
-            <tr><td colspan="2">Your cart is empty.</td></tr>
-        }
-    </tbody>
-</table>
 
 <div class="row">
     <div class="col-md-4">
@@ -58,7 +22,50 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>*@
-        
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th> Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (cartProducts != null && cartProducts.Any())
+                    {
+                        decimal totalAmount = 0;
+                        foreach (var item in cartProducts)
+                        {
+                            totalAmount += item.Product.Price;
+
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Product.Price.ToString("C")</td>
+                                <td>
+                                    <input type="number" value="@item.Quantity" name="orderProducts" />
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger" asp-controller="OrderProducts" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                        <div class="form-group">
+                            <label class="control-label"> Total price</label>
+                            <input asp-for="TotalAmount" class="form-control" name="TotalAmount" value="@totalAmount" disabled />
+                            <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <tr><td colspan="2">Your cart is empty.</td></tr>
+                    }
+                </tbody>
+            </table>
+
+
+
             <div class="form-group">
                 <input type="submit" value="Order now" class="btn btn-primary" />
             </div>
