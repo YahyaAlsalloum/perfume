@@ -25,6 +25,8 @@ namespace perfume.Data
         public DbSet<OrderProduct> OrderProducts { get; set; } 
         public DbSet<Product> Products { get; set; }
         public DbSet<perfume.Models.BasePerfume> BasePerfume { get; set; } = default!;
+        public DbSet<perfume.Models.Message> Message { get; set; } = default!;
+        public DbSet<perfume.Models.Favorite> Favorite { get; set; } = default!;
     }
 
 }

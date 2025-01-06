@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using perfume.Data;
 using perfume.Models;
@@ -58,9 +59,21 @@ namespace perfume.Controllers
             }
         }
 
+        public async Task<IActionResult> AddToFavorite( string imageUrl, string name)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("You must be logged in to add items to your cart.");
 
-
-        [Authorize]
+            var favorite = new Favorite
+            {
+                Name = name,
+                Image = imageUrl,
+            };
+            _context.Add(favorite);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+            [Authorize]
         public async Task<IActionResult> AddToCart(int productId)
         {
             var user = await _userManager.GetUserAsync(User);
