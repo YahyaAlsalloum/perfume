@@ -1,4 +1,4 @@
-﻿@model perfume.Models.Order
+﻿@model perfume.Models.Order ;
 
 @{
     ViewData["Title"] = "Create";
@@ -11,12 +11,8 @@
 <hr />
 
 
-
-
-
-<div class="row">
+<div class="row d-flex">
     <div class="col-md-4">
-        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
            @* <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
@@ -37,24 +33,32 @@
                         decimal totalAmount = 0;
                         foreach (var item in cartProducts)
                         {
-                            totalAmount += item.Product.Price;
-
                             <tr>
                                 <td>@item.Product.Name</td>
-                                <td>@item.Product.Price.ToString("C")</td>
-                                <td>
-                                    <input type="number" value="@item.Quantity" name="orderProducts" />
+                                <td>@item.Product.Price</td>
+                                <td class="d-flex">
+                                    <form asp-action="EditQuantity" class="d-flex">
+                                        <input type="hidden" asp-for="Id" name="Id" value="@item.Id" />
+                                        <input type="number" name="Quantity" value="@item.Quantity" />
+                                        <input type="submit" value="Save" class="btn btn-primary" />
+                                    </form>
+
                                 </td>
+
+                                
                                 <td>
                                     <a class="btn btn-danger" asp-controller="OrderProducts" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                                 </td>
                             </tr>
                         }
                         <div class="form-group">
-                            <label class="control-label"> Total price</label>
-                            <input asp-for="TotalAmount" class="form-control" name="TotalAmount" value="@totalAmount" disabled />
+                            <label asp-for="TotalAmount" class="control-label"></label>
+                            <input asp-for="TotalAmount" class="form-control" value="@totalAmount" disabled />
                             <span asp-validation-for="TotalAmount" class="text-danger"></span>
                         </div>
+                        <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
+                        <input type="hidden" asp-for="Status" value="pinding" />
+
 
                     }
                     else
@@ -64,6 +68,7 @@
                 </tbody>
             </table>
 
+        <form asp-action="Create">
 
 
             <div class="form-group">

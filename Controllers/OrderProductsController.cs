@@ -95,7 +95,7 @@ namespace perfume.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderId,ProductId")] OrderProduct orderProduct)
+        public async Task<IActionResult> Edit(int id,  OrderProduct orderProduct , int Quantity)
         {
             if (id != orderProduct.Id)
             {
@@ -106,6 +106,7 @@ namespace perfume.Controllers
             {
                 try
                 {
+                    orderProduct.Quantity = Quantity;
                     _context.Update(orderProduct);
                     await _context.SaveChangesAsync();
                 }

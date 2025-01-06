@@ -25,6 +25,20 @@ namespace perfume.Controllers
             _userManager = userManager;
 
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditQuantity(int id, int quantity)
+        {
+            var orderProduct = _context.OrderProducts.Find(id);
+            if (orderProduct != null)
+            {
+                orderProduct.Quantity = quantity;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Create");
+            }
+            return RedirectToAction("Create");
+        }
+
 
         // GET: Orders
         public async Task<IActionResult> Index()
@@ -77,19 +91,17 @@ namespace perfume.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Order order, List<OrderProduct> orderProducts ,int TotalAmount)
+        public async Task<IActionResult> Create( Order order, List<OrderProduct>orderProducts , decimal TotalAmount)
         {
-            // Get the user 
+            // Get the user   
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized("You must be logged in to create an order.");
             }
-            if (ModelState.IsValid)
-            {
+            
                 order.UserId = user.Id;
                 order.OrderDate = DateTime.Now;
-                order.TotalAmount = TotalAmount;
                 order.Status = "Pinding";
                 _context.Add(order);
                 await _context.SaveChangesAsync();
@@ -101,8 +113,9 @@ namespace perfume.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            return RedirectToAction("Index", "Home");
+
+
 
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
             return View(order);
@@ -131,7 +144,7 @@ namespace perfume.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,OrderDate,TotalAmount,Status")] Order order)
+        public async Task<IActionResult> Edit(int id,  Order order)
         {
             if (id != order.Id)
             {
@@ -204,5 +217,9 @@ namespace perfume.Controllers
         {
           return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+
+
     }
 }
