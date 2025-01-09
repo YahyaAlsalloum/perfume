@@ -25,6 +25,9 @@ namespace perfume.Controllers
             _userManager = userManager;
 
         }
+
+
+        //this method update the quantity of product in the order "cart"
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditQuantity(int id, int quantity)
@@ -70,8 +73,7 @@ namespace perfume.Controllers
         //[Authorize]
         public async Task<IActionResult> Create()
         {
-            /*            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            */
+            //get the last order:
             var lastOrder = await _context.Order
          .OrderByDescending(o => o.OrderDate)
          .FirstOrDefaultAsync();
@@ -81,6 +83,12 @@ namespace perfume.Controllers
         .Where(op => op.OrderId == lastOrder.Id)
         .Include(op => op.Product) // to include product details
         .ToListAsync();
+
+
+            //get the maked perfume:
+            var makedPerfume = await _context.BasePerfume.Include(o => o.User).ToListAsync();
+
+                ViewData["makedPerfume"] = makedPerfume;
 
             ViewData["cartProducts"] = selectedProducts;
 

@@ -1,4 +1,6 @@
-﻿namespace perfume.Models
+﻿using System.ComponentModel;
+
+namespace perfume.Models
 {
     public class OrderProduct
     {
@@ -7,6 +9,8 @@
         public int? OrderId { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        [DefaultValue(1)]
         public int? Quantity { get; set; }
 
     }

@@ -1,9 +1,9 @@
 ﻿@model perfume.Models.Order ;
 
 @{
-    ViewData["Title"] = "Create";
-    var cartProducts = ViewData["cartProducts"] as List<perfume.Models.OrderProduct>; ;
-
+    ViewData["Title"] = "Cart";
+    var cartProducts = ViewData["cartProducts"] as List<perfume.Models.OrderProduct>;
+    var makedPerfume = ViewData["makedPerfume"] as List<perfume.Models.BasePerfume>;
 }
 
 <h1 style="margin-top:100px;">Create Order</h1>
@@ -14,10 +14,7 @@
 <div class="row d-flex">
     <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           @* <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>*@
+           
             <table class="table">
                 <thead>
                     <tr>
@@ -56,10 +53,11 @@
                         }
                         <div class="form-group">
                             <label asp-for="TotalAmount" class="control-label"></label>
+                        <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
+
                             <input asp-for="TotalAmount" class="form-control" value="@totalAmount" disabled />
                             <span asp-validation-for="TotalAmount" class="text-danger"></span>
                         </div>
-                        <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
                         <input type="hidden" asp-for="Status" value="pinding" />
 
 
@@ -70,6 +68,72 @@
                     }
                 </tbody>
             </table>
+
+
+        @if (makedPerfume != null)
+        {
+            <table class="table" style="margin-top:100px;">
+                <thead>
+                    <tr>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            SelectedBases
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in makedPerfume)
+                    {
+                        int price = 0;
+                        if (item.Size == 50)
+                        { price = 10; }
+                        if (item.Size == 100)
+                        { price = 20; }
+                        if (item.Size == 200)
+                        { price = 35; }
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SelectedBases)
+                            </td>
+
+                            <td>@(price * item.Quantity)</td>
+
+                            <td>
+
+                                <a class="btn btn-danger" asp-asp-controller="BasePerfumes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        }
+        else
+        {
+            <p> there is no selected base perfumes</p>
+        }
+       
 
         <form asp-action="Create">
 
