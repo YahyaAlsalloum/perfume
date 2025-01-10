@@ -19,7 +19,7 @@
                 <thead>
                     <tr>
                         <th>Product Name</th>
-                        <th>Price</th>
+                    <th>Price With Discount</th>
                         <th> Quantity</th>
                         <th>Action</th>
                     </tr>
@@ -32,7 +32,7 @@
                         {
                             <tr>
                                 <td>@item.Product.Name</td>
-                                <td>@item.Product.Price</td>
+                            <td>@item.Product.WithDiscount</td>
                                 <td class="d-flex">
                                     <form asp-action="EditQuantity" class="d-flex">
                                         <input type="hidden" asp-for="Id" name="Id" value="@item.Id" />
@@ -40,9 +40,9 @@
                                         <input type="submit" value="Save" class="btn btn-primary" />
                                     </form>
                                 @{
-                                    if (@item.Quantity * @item.Product.Price != null)
+                                    if (@item.Quantity * @item.Product.WithDiscount != null)
                                     {
-                                        totalAmount += (decimal)(@item.Quantity * @item.Product.Price);
+                                        totalAmount += (decimal)(@item.Quantity * @item.Product.WithDiscount);
 
                                     }
 
