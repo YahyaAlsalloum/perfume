@@ -39,8 +39,12 @@
                                     <input type="number" name="Quantity" value="@item.Quantity" min="1" />
                                         <input type="submit" value="Save" class="btn btn-primary" />
                                     </form>
-                                    @{
-                                    totalAmount +=(decimal) (@item.Quantity * @item.Product.Price);
+                                @{
+                                    if (@item.Quantity * @item.Product.Price != null)
+                                    {
+                                        totalAmount += (decimal)(@item.Quantity * @item.Product.Price);
+
+                                    }
 
                                     }
                                 </td>
