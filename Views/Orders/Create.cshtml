@@ -5,14 +5,81 @@
     var cartProducts = ViewData["cartProducts"] as List<perfume.Models.OrderProduct>;
     var makedPerfume = ViewData["makedPerfume"] as List<perfume.Models.BasePerfume>;
 }
+<head>
+    <style>
+        .card-logos {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius:  5px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-logos {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius:  5px;
+        }
+
+    </style>
+</head>
 <h1 style="margin-top:100px;">Create Order</h1>
 
 <hr />
 
 
-<div class="row d-flex">
-    <div class="col-md-4">
+<div >
+    <div class="col-md-8">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
            
             <table class="table">
@@ -74,7 +141,7 @@
             </table>
 
 
-        @if (makedPerfume != null)
+        @if (makedPerfume != null  )
         {
             <table class="table" style="margin-top:100px;">
                 <thead>
@@ -124,7 +191,7 @@
 
                             <td>
 
-                                <a class="btn btn-danger" asp-asp-controller="BasePerfumes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                <a class="btn btn-danger" asp-controller="BasePerfumes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                             </td>
                         </tr>
                     }
@@ -137,21 +204,100 @@
         {
             <p> there is no selected base perfumes</p>
         }
-       
 
-        <form asp-action="Create">
-
-
-            <div class="form-group">
-                <input type="submit" value="Order now" class="btn btn-primary" />
+        <div class="d-flex row justify-content-center mt-5" style="width:100% !important;">
+            <div class="col-md-8">
+                <div class="card bg-light p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Billing Information</h4>
+                            <div class="form-group">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">address:</label>
+                                <textarea id="address" placeholder="Enter your address" required ></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Payment Details</h4>
+                            <div class="card-logos">
+                                <img src="~/images/paypal.jpeg" alt="PayPal" style="width: 40px;">
+                                <img src="~/images/visa.png" alt="Visa" style="width: 40px;">
+                                <img src="~/images/mastercard.png" alt="Mastercard" style="width: 40px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardName">Name On Card:</label>
+                                <input type="text" id="cardName" placeholder="Enter card name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardNum">Credit Card Number:</label>
+                                <input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="expMonth">Exp Month:</label>
+                                        <select id="expMonth" required>
+                                            <option value="">Choose month</option>
+                                            <option value="January">January</option>
+                                            <!-- ... -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="expYear">Exp Year:</label>
+                                        <select id="expYear" required>
+                                            <option value="">Choose Year</option>
+                                            <option value="2023">2023</option>
+                                            <!-- ... -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="number" id="cvv" placeholder="1234" required>
+                            </div>
+                        </div>
+                    </div>
+                    <form asp-action="Create">
+                        <div class="form-group">
+                            <input type="submit" value="Order now" class="btn btn-primary" id="submitBtn" disabled />
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
+
+
+
+   
     </div>
 </div>
 
 <div>
     <a asp-controller="Products" asp-action="Index">Back to Products</a>
 </div>
+
+
+<script>
+    const submitBtn = document.getElementById('submitBtn');
+    const cvvInput = document.getElementById('cvv');
+
+    cvvInput.addEventListener('input', function () {
+        if (this.value.length === 4) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    });
+
+
+</script>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
