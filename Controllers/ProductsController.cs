@@ -29,18 +29,20 @@ namespace perfume.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
+            return _context.Product != null ?
                           View(await _context.Product.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Product'  is null.");
 
-            if (_context.Product != null)
-            {
-                View(await _context.Product.ToListAsync());
-            }
-            else
-            {
-                Problem("Entity set 'ApplicationDbContext.Product'  is null.");
-            }
+
+        }
+
+        // GET : search product 
+        public async Task<IActionResult> Search(string searchPhrase)
+        {
+            return _context.Product != null ?
+                        View("Index", await _context.Product.Where(j => EF.Functions.Like(j.Name, $"%{searchPhrase}%")).ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+
         }
         //GET : Products in admin page
         public async Task<IActionResult> IndexAdmin()

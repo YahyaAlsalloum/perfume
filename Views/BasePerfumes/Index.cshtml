@@ -27,7 +27,7 @@ text-align: center;
     <form asp-action="Create" method="post"> 
     <div class="row">
         <div class="col-md-4">
-            <h2>العطور الزهرية</h2>
+            <h2> Floral Notes</h2>
             @foreach (var rose in roses)
             {
                 <div class="card mt-3">
@@ -35,13 +35,13 @@ text-align: center;
                     <div class="card-body">
                         <h5 class="card-title">@rose.Name</h5>
                         <input type="checkbox" id="@rose.Id" name="selectedRoses" value="@rose.Name" />
-                        <label for="@rose.Name">اختيار</label>
+                        <label for="@rose.Name">Choose</label>
                     </div>
                 </div>
             }
         </div>
         <div class="col-md-4">
-            <h2>العطور الفواكهية</h2>
+            <h2> Fruity Notes</h2>
             @foreach (var fruit in fruits)
             {
                 <div class="card mt-3">
@@ -49,13 +49,13 @@ text-align: center;
                     <div class="card-body">
                         <h5 class="card-title">@fruit.Name</h5>
                         <input type="checkbox" id="@fruit.Id" name="selectedFruits" value="@fruit.Name" />
-                        <label for="@fruit.Name">اختيار</label>
+                            <label for="@fruit.Name">Choose</label>
                     </div>
                 </div>
             }
         </div>
         <div class="col-md-4">
-            <h2>العطور الخشبية</h2>
+            <h2> Woody Notes</h2>
             @foreach (var wood in woods)
             {
                 <div class="card mt-3">
@@ -63,18 +63,18 @@ text-align: center;
                     <div class="card-body">
                         <h5 class="card-title">@wood.Name</h5>
                         <input type="checkbox" id="@wood.Id" name="selectedWoods" value="@wood.Name" />
-                        <label for="@wood.Name">اختيار</label>
+                            <label for="@wood.Name">Choose</label>
                     </div>
                 </div>
             }
         </div>
     </div>
         <div class="form-group">
-            <label asp-for="Size" class="control-label">الحجم (مل)</label>
+            <label asp-for="Size" class="control-label"> Size (mm)</label>
             <select asp-for="Size" class="form-control">
-                <option value="50">50 مل</option>
-                <option value="100">100 مل</option>
-                <option value="200">200 مل</option>
+                <option value="50">50 ml</option>
+                <option value="100">100 ml</option>
+                <option value="200">200 ml</option>
             </select>
             <span asp-validation-for="Size" class="text-danger"></span>
         </div>

@@ -70,27 +70,28 @@ namespace perfume.Controllers
         }
 
         // GET: Orders/Create
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
-            //get the last order:
-            var lastOrder = await _context.Order
-         .OrderByDescending(o => o.OrderDate)
-         .FirstOrDefaultAsync();
 
-            // fetch the selected products 
-            var selectedProducts = await _context.OrderProducts
-        .Where(op => op.OrderId == lastOrder.Id)
-        .Include(op => op.Product) // to include product details
-        .ToListAsync();
+            var user = await _userManager.GetUserAsync(User);
+            var cartOrder = await _context.Order
+                .FirstOrDefaultAsync(o => o.UserId == user.Id && o.Status == "Cart");
 
+            if (cartOrder != null)
+            {
+                var selectedProducts = await _context.OrderProducts
+                    .Where(op => op.OrderId == cartOrder.Id)
+                    .Include(op => op.Product)
+                    .ToListAsync();
+
+                ViewData["cartProducts"] = selectedProducts;
+            }
 
             //get the maked perfume:
             var makedPerfume = await _context.BasePerfume.Include(o => o.User).ToListAsync();
 
                 ViewData["makedPerfume"] = makedPerfume;
-
-            ViewData["cartProducts"] = selectedProducts;
 
             return View();
         }
