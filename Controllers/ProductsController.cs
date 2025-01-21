@@ -75,7 +75,6 @@ namespace perfume.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-            [Authorize]
         public async Task<IActionResult> AddToCart(int productId)
         {
             var user = await _userManager.GetUserAsync(User);

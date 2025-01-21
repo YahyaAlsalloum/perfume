@@ -91,12 +91,14 @@ text-align: center;
     </form>
 </div>
 
-            <script>
+
+<script>
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const resultDiv = document.getElementById('result');
 
     const perfumes = [
         { name: "Dior Savage", ingredients: ["Rose", "Orange"] },
+        { name: "Chanel Coco Mademoiselle & Tom Ford Noir", ingredients: ["Orange"] },
         { name: "Chanel No. 5", ingredients: ["Lavnder", "Frankincense"] },
         { name: "Gucci Bleu de Chanel", ingredients: ["Jasmine", "Lemon"] },
         { name: "Prada L'Homme", ingredients: ["Honeysuckle", "Sandalwood"] },
@@ -106,6 +108,12 @@ text-align: center;
         { name: "Chanel Coco Mademoiselle", ingredients: ["Orange Blossom", "Pomegranate"] },
         { name: "Gucci Pour Homme", ingredients: ["Lavnder", "Sandalwood"] },
         { name: "Prada Caviar", ingredients: ["Honeysuckle", "Rosewood"] },
+        { name: "Dior J'Adore", ingredients: ["Jasmine", "Rose"] },
+        { name: "Chanel Chance", ingredients: ["Citrus", "Floral"] },
+        { name: "Gucci Bamboo", ingredients: ["Green Tea", "White Flowers"] },
+        { name: "Prada Candy", ingredients: ["Vanilla", "Caramel"] },
+        { name: "Tom Ford Black Orchid", ingredients: ["Spice", "Incense"] },
+        { name: "Joop! Femme", ingredients: ["Floral", "Fruity"] },
     ];
 
     checkboxes.forEach((checkbox) => {
@@ -113,7 +121,6 @@ text-align: center;
             const selectedRoses = document.querySelectorAll('input[name="selectedRoses"]:checked');
             const selectedFruits = document.querySelectorAll('input[name="selectedFruits"]:checked');
             const selectedWoods = document.querySelectorAll('input[name="selectedWoods"]:checked');
-
             const selectedIngredients = [
                 ...selectedRoses,
                 ...selectedFruits,
@@ -123,21 +130,20 @@ text-align: center;
             if (selectedIngredients.length > 0) {
                 const ingredientNames = selectedIngredients.map((ingredient) => ingredient.value);
                 const matchingPerfumes = perfumes.filter((perfume) => {
-                    return perfume.ingredients.every((ingredient) => ingredientNames.includes(ingredient));
+                    return perfume.ingredients.some((ingredient) => ingredientNames.includes(ingredient));
                 });
 
-
                 if (matchingPerfumes.length > 0) {
-                    const message = `The closest matching perfume containing ${ingredientNames.join(', ')} is ${matchingPerfumes[0].name}.`;
-                    resultDiv.innerText = message;
+                    const message = `The closest matching perfumes containing ${ingredientNames.join(', ')} are: `;
+                    const perfumeList = matchingPerfumes.map((perfume) => perfume.name).join(', ');
+                    resultDiv.innerText = message + perfumeList;
                 } else {
                     resultDiv.innerText = "No perfume found with all selected ingredients.";
                 }
-
             } else {
                 resultDiv.innerText = '';
             }
         });
     });
+</script>
 
-            </script>

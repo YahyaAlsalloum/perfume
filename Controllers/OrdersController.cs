@@ -46,10 +46,15 @@ namespace perfume.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.User);
-            return View(await applicationDbContext.ToListAsync());
-        }
+            // Include the User and related OrderProducts with their associated Product
+            var orders = await _context.Order
+                .Include(o => o.User) // Include the User entity
+                .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product) // Include the Product entity
+                .ToListAsync();
 
+            return View(orders);
+        }
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -91,7 +96,7 @@ namespace perfume.Controllers
             //get the maked perfume:
             var makedPerfume = await _context.BasePerfume.Include(o => o.User).ToListAsync();
 
-                ViewData["makedPerfume"] = makedPerfume;
+            ViewData["makedPerfume"] = makedPerfume;
 
             return View();
         }
@@ -100,7 +105,7 @@ namespace perfume.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Order order, List<OrderProduct>orderProducts , decimal TotalAmount)
+        public async Task<IActionResult> Create(Order order, List<OrderProduct> orderProducts, decimal TotalAmount)
         {
             // Get the user   
             var user = await _userManager.GetUserAsync(User);
@@ -108,20 +113,20 @@ namespace perfume.Controllers
             {
                 return Unauthorized("You must be logged in to create an order.");
             }
-            
-                order.UserId = user.Id;
-                order.OrderDate = DateTime.Now;
-                order.Status = "Pinding";
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                foreach (var product in orderProducts)
-                {
-                    product.OrderId = order.Id;
 
-                    _context.Add(product);
-                }
+            order.UserId = user.Id;
+            order.OrderDate = DateTime.Now;
+            order.Status = "Processing";
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+            foreach (var product in orderProducts)
+            {
+                product.OrderId = order.Id;
 
-                await _context.SaveChangesAsync();
+                _context.Add(product);
+            }
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
 
 
@@ -153,7 +158,7 @@ namespace perfume.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,  Order order)
+        public async Task<IActionResult> Edit(int id, Order order)
         {
             if (id != order.Id)
             {
@@ -217,14 +222,14 @@ namespace perfume.Controllers
             {
                 _context.Order.Remove(order);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
         {
-          return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
 

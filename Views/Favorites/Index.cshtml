@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<perfume.Models.Favorite>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Favorite";
 }
 <div class="d-flex justify-content-center align-content-center" style="margin-top:100px;" >
     <h3>My Favorites</h3>
@@ -50,6 +50,7 @@
                     <div class="d-flex justify-content-end">
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                     </div>
+            
                 </div>
             </div>
         </div>

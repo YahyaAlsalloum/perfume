@@ -92,9 +92,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                     decimal totalAmount = 0;
+                    }
                     @if (cartProducts != null && cartProducts.Any())
                     {
-                        decimal totalAmount = 0;
                         foreach (var item in cartProducts)
                         {
                             <tr>
@@ -122,14 +124,7 @@
                                 </td>
                             </tr>
                         }
-                        <div class="form-group">
-                            <label asp-for="TotalAmount" class="control-label"></label>
-                        <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
-
-                            <input asp-for="TotalAmount" class="form-control" value="@totalAmount" disabled />
-                            <span asp-validation-for="TotalAmount" class="text-danger"></span>
-                        </div>
-                        <input type="hidden" asp-for="Status" value="pinding" />
+                     
 
 
                     }
@@ -188,7 +183,10 @@
                             </td>
 
                             <td>@(price * item.Quantity)</td>
+                            @{
+                           totalAmount += (decimal)(price * item.Quantity);
 
+                            }
                             <td>
 
                                 <a class="btn btn-danger" asp-controller="BasePerfumes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -205,6 +203,9 @@
             <p> there is no selected base perfumes</p>
         }
 
+
+
+
         <div class="d-flex row justify-content-center mt-5" style="width:100% !important;">
             <div class="col-md-8">
                 <div class="card bg-light p-4">
@@ -215,14 +216,7 @@
                                 <label for="name">Full Name:</label>
                                 <input type="text" id="name" placeholder="Enter your full name" required>
                             </div>
-                          @*  <div class="form-group">
-                                <label for="phone">Phone Number:</label>
-                                <input type="number" id="phone" placeholder="00962 - - -   " required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">address:</label>
-                                <textarea id="address" placeholder="Enter your address" required ></textarea>
-                            </div>*@
+
                         </div>
                         <div class="col-md-6">
                             <h4>Payment Details</h4>
@@ -283,6 +277,18 @@
                         </div>
                     </div>
                     <form asp-action="Create">
+                        
+           <div class="form-group">
+                            <label asp-for="TotalAmount" class="control-label"></label>
+                        <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
+
+                            <input asp-for="TotalAmount" class="form-control" value="@totalAmount" disabled />
+                            <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                           <input type="hidden" asp-for="Status" value="Processing" />
+
+                        </div>
+
+
 
                         <div class="form-group">
                     <label asp-for="Address" class="control-label"></label>

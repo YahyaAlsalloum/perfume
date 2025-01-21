@@ -109,7 +109,8 @@ namespace perfume.Controllers
          
                 var selectedBases = selectedRoses.Concat(selectedFruits).Concat(selectedWoods);
                 basePerfume.SelectedBases = string.Join(",", selectedBases);
-                basePerfume.UserId = user.Id; 
+                basePerfume.UserId = user.Id;
+            basePerfume.Status = "Cart";
 
                 try
                 {
