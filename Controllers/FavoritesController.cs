@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using perfume.Data;
+using perfume.Data.Migrations;
 using perfume.Models;
 
 namespace perfume.Controllers
@@ -13,10 +15,13 @@ namespace perfume.Controllers
     public class FavoritesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public FavoritesController(ApplicationDbContext context)
+
+        public FavoritesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Favorites
@@ -26,6 +31,72 @@ namespace perfume.Controllers
                           View(await _context.Favorite.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Favorite'  is null.");
         }
+
+
+        public async Task<IActionResult> payNaw(string Name)
+        {
+            // Get the current user
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized("You must be logged in to add items to your cart.");
+
+            // Check if the product exists by name
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == Name);
+            if (product == null)
+                return NotFound("Product not found.");
+
+            // Check if a cart order already exists for the user
+            var cartOrder = await _context.Order
+                .FirstOrDefaultAsync(o => o.UserId == user.Id && o.Status == "Cart");
+
+            // If no cart exists, create a new one
+            if (cartOrder == null)
+            {
+                cartOrder = new Order
+                {
+                    UserId = user.Id,
+                    Status = "Cart",
+                    OrderDate = DateTime.Now
+                };
+
+                _context.Order.Add(cartOrder);
+                await _context.SaveChangesAsync();
+            }
+
+            // Check if the product is already in the cart
+            var existingOrderProduct = await _context.OrderProducts
+                .FirstOrDefaultAsync(op => op.OrderId == cartOrder.Id && op.ProductId == product.Id);
+
+            if (existingOrderProduct == null)
+            {
+                // Add the product to the OrderProducts table
+                var orderProduct = new OrderProduct
+                {
+                    ProductId = product.Id,
+                    OrderId = cartOrder.Id,
+                    Quantity = 1 // Default quantity as 1
+                };
+
+                _context.OrderProducts.Add(orderProduct);
+                var favorite = await _context.Favorite.FirstOrDefaultAsync(p => p.Name == Name);
+                if (favorite != null)
+                {
+                    _context.Favorite.Remove(favorite);
+                }
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // If the product is already in the cart, update its quantity
+                existingOrderProduct.Quantity += 1;
+                _context.OrderProducts.Update(existingOrderProduct);
+                await _context.SaveChangesAsync();
+            }
+
+            // Redirect to the Products Index page
+            return RedirectToAction("Index", "Products");
+        }
+
 
         // GET: Favorites/Details/5
         public async Task<IActionResult> Details(int? id)
