@@ -277,7 +277,13 @@
                         </div>
                     </div>
                     <form asp-action="Create">
-                        
+                           @foreach (var item in cartProducts)
+    {
+        <input type="hidden" name="orderProducts[@cartProducts.IndexOf(item)].ProductId" value="@item.ProductId" />
+        <input type="hidden" name="orderProducts[@cartProducts.IndexOf(item)].Quantity" value="@item.Quantity" />
+    }
+
+    
            <div class="form-group">
                             <label asp-for="TotalAmount" class="control-label"></label>
                         <input type="hidden" asp-for="TotalAmount" value="@totalAmount" />
