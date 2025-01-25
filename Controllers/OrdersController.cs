@@ -55,6 +55,20 @@ namespace perfume.Controllers
 
             return View(orders);
         }
+        //Get : bill
+        public async Task<IActionResult> Bill()
+        {
+            // Include the User and related OrderProducts with their associated Product
+            var order = await _context.Order
+                .Include(o => o.User) // Include the User entity
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product) // Include the Product entity
+                .OrderByDescending(o => o.OrderDate)
+                .FirstOrDefaultAsync();
+
+            return View(order);
+        }
+
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -127,7 +141,7 @@ namespace perfume.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Bill", "Orders");
 
 
 

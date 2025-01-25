@@ -1,0 +1,51 @@
+﻿@model perfume.Models.Order
+@{
+    ViewData["Title"] = "Billing Information";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2> Billing Information </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Order Information</h3>
+            <p>Order ID: @Model.Id</p>
+            <p>Order Date: @Model.OrderDate</p>
+            <p>Total Amount: @Model.TotalAmount</p>
+            <p>Status: @Model.Status</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Billing Address</h3>
+            <p>Address: @Model.Address</p>
+            <p>Phone: @Model.Phone</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Order Details</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.OrderProducts)
+                    {
+                        <tr>
+                            <td>@product.Product.Name</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Product.Price</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Home")'">Return to Home</button>
